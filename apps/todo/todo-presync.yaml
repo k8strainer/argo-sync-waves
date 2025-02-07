@@ -11,7 +11,7 @@ spec:
   ttlSecondsAfterFinished: 100
   template:
     spec:
-      serviceAccountName: cluster-validation-sa
+      #serviceAccountName: cluster-validation-sa
       containers:
         - name: validator
           image: bitnami/kubectl:latest
