@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cluster-validation
+  namespace: kube-system
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/sync-wave: "-2"
+spec:
+  ttlSecondsAfterFinished: 100
+  template:
+    spec:
+      serviceAccountName: cluster-validation-sa
+      containers:
+        - name: validator
+          image: bitnami/kubectl:latest
+          command:
+            - /bin/sh
+            - -c
+          args:
+            - |
+              echo "Checking required Cluster resources..."
+              if ! kubectl get clusterrole admin > /dev/null 2>&1; then
+                echo "ERROR: Required ClusterRole 'admin' is missing!"
+                exit 1
+              fi
+              echo "Check passed. Proceeding..."
+      restartPolicy: Never
+  backoffLimit: 1
+
