@@ -4,8 +4,7 @@ metadata:
   name: todo-table
   namespace: sync-waves
   annotations:
-    argocd.argoproj.io/sync-wave: "-2" # falsche reihenfolge um error zu erzeuge
-    #argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   template:
     spec:
