@@ -8,7 +8,8 @@ metadata:
     #argocd.argoproj.io/hook-delete-policy: HookSucceeded  # Löschung nach Erfolg
     argocd.argoproj.io/hook-delete-policy: BeforeHookCreation  # default, wenn nicht gesetzt: Hook bleibt bestehen bis der nächste erzeugt wird
 spec:
-  ttlSecondsAfterFinished: 100
+  ##deaktiviert, damit der Job zu Debug-Zwecken bestehen bleibt, wenn "argocd.argoproj.io/hook-delete-policy: BeforeHookCreation" gesetzt
+  #ttlSecondsAfterFinished: 100
   template:
     spec:
       containers:
