@@ -6,7 +6,7 @@ metadata:
   annotations:
     argocd.argoproj.io/hook: PostSync # <1>
     #argocd.argoproj.io/hook-delete-policy: HookSucceeded  # Löschung nach Erfolg
-    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation  # Hook bleibt bestehen bis der nächste erzeugt wird
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation  # default, wenn nicht gesetzt: Hook bleibt bestehen bis der nächste erzeugt wird
 spec:
   ttlSecondsAfterFinished: 100
   template:
