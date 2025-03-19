@@ -5,8 +5,8 @@ metadata:
   name: postgresql
   namespace: sync-waves
   annotations:
-    argocd.argoproj.io/sync-wave: "0"
-    #argocd.argoproj.io/sync-wave: "3" # falsche reihenfolge um error zu erzeugen
+    #argocd.argoproj.io/sync-wave: "0"
+    argocd.argoproj.io/sync-wave: "3" # falsche reihenfolge um error zu erzeugen
 spec:
   selector:
     matchLabels:
