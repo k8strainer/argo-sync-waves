@@ -6,6 +6,7 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "1"
 spec:
+# ttlSecondsAfterFinished: 100  # disabled to let jobs stay after completion
   template:
     spec:
       containers:
