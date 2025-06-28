@@ -5,7 +5,7 @@ metadata:
   namespace: openshift-gitops
   annotations:
     argocd.argoproj.io/hook: PreSync
-    argocd.argoproj.io/sync-wave: "2" # optional, kann gesetzt werden wenn multiple presync-jobs
+    argocd.argoproj.io/sync-wave: "-2" # optional, kann gesetzt werden wenn multiple presync-jobs
     #argocd.argoproj.io/hook-delete-policy: HookSucceeded
     argocd.argoproj.io/hook-delete-policy: BeforeHookCreation  # default, wenn nicht gesetzt: Hook bleibt bestehen bis der nächste erzeugt wird
 spec:
