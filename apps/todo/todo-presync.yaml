@@ -5,6 +5,7 @@ metadata:
   namespace: openshift-gitops
   annotations:
     argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/sync-wave: "-2" # optional, kann gesetzt werden wenn multiple presync-jobs
     #argocd.argoproj.io/hook-delete-policy: HookSucceeded
     argocd.argoproj.io/hook-delete-policy: BeforeHookCreation  # default, wenn nicht gesetzt: Hook bleibt bestehen bis der nächste erzeugt wird
 spec:
@@ -29,4 +30,39 @@ spec:
               echo "Check passed. Proceeding..."
       restartPolicy: Never
   backoffLimit: 1
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cluster-validation-2
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/sync-wave: "-1" # optional, kann gesetzt werden wenn multiple presync-jobs
+    #argocd.argoproj.io/hook-delete-policy: HookSucceeded
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation  # default, wenn nicht gesetzt: Hook bleibt bestehen bis der nächste erzeugt wird
+
+    # job will be deleted if RC 0
+spec:
+  # ttlSecondsAfterFinished: 100
+  template:
+    spec:
+      #serviceAccountName: cluster-validation-sa
+      containers:
+        - name: validator
+          image: bitnami/kubectl:latest
+          command:
+            - /bin/sh
+            - -c
+          args:
+            - |
+              echo "Checking required Cluster resources..."
+              if ! kubectl get clusterrole admin > /dev/null 2>&1; then
+                echo "ERROR: Required ClusterRole 'admin' is missing!"
+                exit 1
+              fi
+              echo "Check passed. Proceeding..."
+      restartPolicy: Never
+  backoffLimit: 1
+
 
