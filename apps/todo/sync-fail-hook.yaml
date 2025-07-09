@@ -1,0 +1,24 @@
+# SyncFail Hook, kann verwendet werden um beim Fehlschlag des Sync
+# primäre und ggf erzeugte Ressourcen rückstandsfrei zu entfernen.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: syncfail-audit
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/hook: SyncFail
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: logger
+          image: registry.access.redhat.com/ubi9/ubi-minimal
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              echo "Argo CD Sync für Anwendung »sync-waves« fehlgeschlagen am $(date -u +'%Y-%m-%dT%H:%M:%SZ')."
+              echo "Bereinige Ressourcen [dummy-entry]"
+              sleep 30
+  backoffLimit: 1
