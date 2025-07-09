@@ -21,4 +21,5 @@ spec:
               echo "Warte 30 Sekunden bevor Audit-Log geschrieben wird …"
               sleep 30
               echo "Argo CD hat die Anwendung »sync-waves« am $(date -u +'%Y-%m-%dT%H:%M:%SZ') vollständig entfernt."
+              sleep 10
   backoffLimit: 1
