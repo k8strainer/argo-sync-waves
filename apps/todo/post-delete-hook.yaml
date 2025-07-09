@@ -1,25 +1,24 @@
-## PostDelete Hook: Räumt bei Bedarf übriggebliebene PVCs auf
 ---
+## PostDelete Hook: Räumt bei Bedarf übriggebliebene Ressourcen auf (Hier nur Textmeldung)
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: todo-cleanup
+  name: postdelete-audit
   namespace: openshift-gitops
   annotations:
-    argocd.argoproj.io/hook: PostDelete        # läuft erst nach vollständigem Prune
+    argocd.argoproj.io/hook: PostDelete
     argocd.argoproj.io/hook-delete-policy: HookSucceeded
 spec:
   template:
     spec:
+      restartPolicy: Never
       containers:
-        - name: cleanup
-          image: bitnami/kubectl:latest
-          command: ["/bin/sh", "-c"]
+        - name: logger
+          image: registry.access.redhat.com/ubi9/ubi-minimal
+          command: ["/bin/sh","-c"]
           args:
             - |
-              echo "Bereinige übrig gebliebene Ressourcen ..."
-              kubectl delete pvc -n sync-waves -l app=postgresql --ignore-not-found
-              echo "Cleanup abgeschlossen."
-      restartPolicy: Never
+              echo "Warte 30 Sekunden bevor Audit-Log geschrieben wird …"
+              sleep 30
+              echo "Argo CD hat die Anwendung »sync-waves« am $(date -u +'%Y-%m-%dT%H:%M:%SZ') vollständig entfernt."
   backoffLimit: 1
-
