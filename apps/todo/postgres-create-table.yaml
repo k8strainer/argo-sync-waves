@@ -5,6 +5,8 @@ metadata:
   namespace: sync-waves
   annotations:
     argocd.argoproj.io/sync-wave: "1"
+    # set to -2 to fail app
+    #argocd.argoproj.io/sync-wave: "-2"
 spec:
 # ttlSecondsAfterFinished: 100  # disabled to let jobs stay after completion
   template:
