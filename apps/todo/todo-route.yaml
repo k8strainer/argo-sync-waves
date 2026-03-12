@@ -3,6 +3,7 @@ kind: Route
 metadata:
   labels:
     app: todo
+    cleanup.argocd/example: sync-waves
   name: todo
   namespace: sync-waves
   annotations:
