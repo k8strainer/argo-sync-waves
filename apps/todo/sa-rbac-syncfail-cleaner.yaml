@@ -31,7 +31,7 @@ rules:
     resources:
       - jobs
       - cronjobs
-    verbs: ["get", "list", "delete", "deletecollection"]
+    verbs: ["get", "list", "delete", "create", "deletecollection"]
   - apiGroups: ["route.openshift.io"]
     resources:
       - routes
