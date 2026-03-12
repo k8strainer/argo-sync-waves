@@ -57,7 +57,7 @@ spec:
               # Nicht auch per Selector rolebindings/roles löschen, weil sonst
               # mitten im Lauf die eigenen Rechte weg sind.
               #
-              oc delete route,service,deployment,job,serviceaccount,secret \
+              oc delete route,service,deployment,job,serviceaccount,secret,namespace \
                 -n "${TARGET_NS}" \
                 -l "${SELECTOR}" \
                 --ignore-not-found=true \
