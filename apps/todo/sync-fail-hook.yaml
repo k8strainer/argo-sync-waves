@@ -47,6 +47,7 @@ spec:
           args:
             - |
               TARGET_NS="sync-waves"
+              TARGET_NS-2="openshift-gitops"
               SELECTOR="cleanup.argocd/example=sync-waves"
 
               echo "[$(date -u +'%Y-%m-%dT%H:%M:%SZ')] Sync fehlgeschlagen. Starte Cleanup in ${TARGET_NS}"
@@ -61,7 +62,11 @@ spec:
                 -l "${SELECTOR}" \
                 --ignore-not-found=true \
                 --wait=false
-
+              oc delete job \
+                -n "${TARGET_NS-2}" \
+                -l "${SELECTOR}" \
+                --ignore-not-found=true \
+                --wait=false
               #
               # Optional ganz am Ende:
               # Wenn auch das RoleBinding gelöscht werden soll, dann nur explizit
