@@ -1,6 +1,8 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
+  labels:
+    cleanup.argocd/example: sync-waves
   name: cluster-validation
   namespace: openshift-gitops
   annotations:
@@ -34,6 +36,8 @@ spec:
 apiVersion: batch/v1
 kind: Job
 metadata:
+  labels:
+    cleanup.argocd/example: sync-waves
   name: cluster-validation-2
   namespace: openshift-gitops
   annotations:
