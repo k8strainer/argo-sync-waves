@@ -50,7 +50,7 @@ spec:
               TARGET_NS2="openshift-gitops"
               SELECTOR="cleanup.argocd/example=sync-waves"
 
-              echo "[$(date -u +'%Y-%m-%dT%H:%M:%SZ')] Sync fehlgeschlagen. Starte Cleanup in ${TARGET_NS}"
+              echo "[$(date -u +'%Y-%m-%dT%H:%M:%SZ')] Sync fehlgeschlagen. Starte Cleanup in ${TARGET_NS} und ${TARGET_NS2}"
 
               #
               # Wichtig:
