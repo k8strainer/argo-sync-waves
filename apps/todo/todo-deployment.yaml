@@ -33,6 +33,7 @@ spec:
       labels:
         app.kubernetes.io/name: "todo-gitops"
         app.kubernetes.io/version: "1.0.0"
+        cleanup.argocd/example: sync-waves
     spec:
       containers:
       - env:

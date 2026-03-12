@@ -17,6 +17,7 @@ spec:
     metadata:
       labels:
         app: postgresql
+        cleanup.argocd/example: sync-waves
     spec:
       containers:
         - name: postgresql
