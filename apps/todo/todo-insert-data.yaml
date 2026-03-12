@@ -19,19 +19,19 @@ spec:
           image: alpine/httpie:2.4.0
           imagePullPolicy: Always
           command: ["http"]
-          args:
-            [
-              "POST",
-              "todo-gitops:8080/api",
-              "title=Finish ArgoCD tutorial",
-              "--ignore-stdin"
-            ]
-          #args: # broken
+          #args:
           #  [
           #    "POST",
-          #    "todo-gitops:9999/api",
+          #    "todo-gitops:8080/api",
           #    "title=Finish ArgoCD tutorial",
           #    "--ignore-stdin"
           #  ]
+          args: # broken
+            [
+              "POST",
+              "todo-gitops:9999/api",
+              "title=Finish ArgoCD tutorial",
+              "--ignore-stdin"
+            ]
       restartPolicy: Never
   backoffLimit: 1
