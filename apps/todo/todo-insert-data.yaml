@@ -1,6 +1,8 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
+  labels:
+    cleanup.argocd/example: sync-waves
   name: todo-insert
   namespace: sync-waves
   annotations:
