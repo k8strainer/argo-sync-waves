@@ -27,8 +27,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: syncfail-cleanup
-  namespace: openshift-gitops
-  #namespace: sync-waves
+  namespace: sync-waves
   annotations:
     argocd.argoproj.io/hook: SyncFail
     argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
