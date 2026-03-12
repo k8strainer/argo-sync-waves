@@ -3,7 +3,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: syncfail-cleaner
-  namespace: openshift-gitops
+  namespace: sync-waves
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -50,7 +50,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: syncfail-cleaner
-    namespace: openshift-gitops
+    namespace: sync-waves
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
