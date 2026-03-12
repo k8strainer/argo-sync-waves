@@ -24,8 +24,7 @@ spec:
           imagePullPolicy: Always
           ports:
             - name: tcp
-              #containerPort: 5432
-              containerPort: 5499  # simulate error   
+              containerPort: 5432
           env:
             - name: PG_USER_PASSWORD
               valueFrom:
