@@ -1,24 +1,65 @@
-# SyncFail Hook, kann verwendet werden um beim Fehlschlag des Sync
-# primäre und ggf erzeugte Ressourcen rückstandsfrei zu entfernen.
+## SyncFail Hook, kann verwendet werden um beim Fehlschlag des Sync
+## primäre und ggf erzeugte Ressourcen rückstandsfrei zu entfernen.
+#apiVersion: batch/v1
+#kind: Job
+#metadata:
+#  name: syncfail-audit
+#  namespace: openshift-gitops
+#  annotations:
+#    argocd.argoproj.io/hook: SyncFail
+#    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+#spec:
+#  template:
+#    spec:
+#      restartPolicy: Never
+#      containers:
+#        - name: logger
+#          image: registry.access.redhat.com/ubi9/ubi-minimal
+#          command: ["/bin/sh", "-c"]
+#          args:
+#            - |
+#              echo "Argo CD Sync für Anwendung »sync-waves« fehlgeschlagen am $(date -u +'%Y-%m-%dT%H:%M:%SZ')."
+#              echo "Bereinige Ressourcen [dummy-entry]"
+#              sleep 30
+#  backoffLimit: 1
+---
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: syncfail-audit
+  name: syncfail-cleanup
   namespace: openshift-gitops
   annotations:
     argocd.argoproj.io/hook: SyncFail
-    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
 spec:
+  backoffLimit: 1
   template:
     spec:
+      serviceAccountName: syncfail-cleaner
       restartPolicy: Never
       containers:
-        - name: logger
-          image: registry.access.redhat.com/ubi9/ubi-minimal
-          command: ["/bin/sh", "-c"]
+        - name: cleanup
+          image: registry.redhat.io/openshift4/ose-cli:latest
+          command:
+            - /bin/bash
+            - -ec
           args:
             - |
-              echo "Argo CD Sync für Anwendung »sync-waves« fehlgeschlagen am $(date -u +'%Y-%m-%dT%H:%M:%SZ')."
-              echo "Bereinige Ressourcen [dummy-entry]"
-              sleep 30
-  backoffLimit: 1
+              TARGET_NS="sync-waves"
+              SELECTOR="cleanup.argocd/example=sync-waves"
+
+              echo "[$(date -u +'%Y-%m-%dT%H:%M:%SZ')] Argo CD Sync ist fehlgeschlagen."
+              echo "Bereinige markierte Ressourcen in Namespace ${TARGET_NS} mit Selector: ${SELECTOR}"
+
+              oc delete route,service,deployment,job,serviceaccount,rolebinding,role \
+                -n "${TARGET_NS}" \
+                -l "${SELECTOR}" \
+                --ignore-not-found=true
+
+              echo "Zusätzliche Bereinigung von Pods/ReplicaSets/PVCs mit gleichem Label"
+              oc delete pod,replicaset,pvc \
+                -n "${TARGET_NS}" \
+                -l "${SELECTOR}" \
+                --ignore-not-found=true
+
+              echo "Cleanup abgeschlossen."
