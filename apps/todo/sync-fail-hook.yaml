@@ -62,12 +62,6 @@ spec:
                 --ignore-not-found=true \
                 --wait=false
 
-              oc delete pod,replicaset,pvc \
-                -n "${TARGET_NS}" \
-                -l "${SELECTOR}" \
-                --ignore-not-found=true \
-                --wait=false
-
               #
               # Optional ganz am Ende:
               # Wenn auch das RoleBinding gelöscht werden soll, dann nur explizit
