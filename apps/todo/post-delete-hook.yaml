@@ -3,6 +3,8 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
+  labels:
+    cleanup.argocd/example: sync-waves
   name: postdelete-audit
   namespace: openshift-gitops
   annotations:
