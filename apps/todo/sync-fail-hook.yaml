@@ -51,6 +51,8 @@ spec:
               echo "[$(date -u +'%Y-%m-%dT%H:%M:%SZ')] Argo CD Sync ist fehlgeschlagen."
               echo "Bereinige markierte Ressourcen in Namespace ${TARGET_NS} mit Selector: ${SELECTOR}"
 
+              sleep 10
+
               oc delete route,service,deployment,job,serviceaccount,rolebinding,role \
                 -n "${TARGET_NS}" \
                 -l "${SELECTOR}" \
