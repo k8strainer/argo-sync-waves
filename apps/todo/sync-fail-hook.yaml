@@ -27,7 +27,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: syncfail-cleanup
-  namespace: sync-waves
+  namespace: openshift-gitops
   annotations:
     argocd.argoproj.io/hook: SyncFail
     argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
@@ -48,20 +48,33 @@ spec:
               TARGET_NS="sync-waves"
               SELECTOR="cleanup.argocd/example=sync-waves"
 
-              echo "[$(date -u +'%Y-%m-%dT%H:%M:%SZ')] Argo CD Sync ist fehlgeschlagen."
-              echo "Bereinige markierte Ressourcen in Namespace ${TARGET_NS} mit Selector: ${SELECTOR}"
+              echo "[$(date -u +'%Y-%m-%dT%H:%M:%SZ')] Sync fehlgeschlagen. Starte Cleanup in ${TARGET_NS}"
 
-              sleep 10
-
-              oc delete route,service,deployment,job,serviceaccount,rolebinding,role \
+              #
+              # Wichtig:
+              # Nicht auch per Selector rolebindings/roles löschen, weil sonst
+              # mitten im Lauf die eigenen Rechte weg sind.
+              #
+              oc delete route,service,deployment,job,serviceaccount,secret \
                 -n "${TARGET_NS}" \
                 -l "${SELECTOR}" \
-                --ignore-not-found=true
+                --ignore-not-found=true \
+                --wait=false
 
-              echo "Zusätzliche Bereinigung von Pods/ReplicaSets/PVCs mit gleichem Label"
               oc delete pod,replicaset,pvc \
                 -n "${TARGET_NS}" \
                 -l "${SELECTOR}" \
-                --ignore-not-found=true
+                --ignore-not-found=true \
+                --wait=false
+
+              #
+              # Optional ganz am Ende:
+              # Wenn auch das RoleBinding gelöscht werden soll, dann nur explizit
+              # als allerletzten Schritt.
+              #
+              # oc delete rolebinding admin-rolebinding \
+              #   -n "${TARGET_NS}" \
+              #   --ignore-not-found=true \
+              #   --wait=false
 
               echo "Cleanup abgeschlossen."
