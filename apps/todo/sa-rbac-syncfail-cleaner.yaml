@@ -4,12 +4,16 @@ kind: ServiceAccount
 metadata:
   name: syncfail-cleaner
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: syncfail-cleaner
   namespace: sync-waves
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
 rules:
   - apiGroups: [""]
     resources:
@@ -47,6 +51,8 @@ kind: RoleBinding
 metadata:
   name: syncfail-cleaner
   namespace: sync-waves
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
 subjects:
   - kind: ServiceAccount
     name: syncfail-cleaner
